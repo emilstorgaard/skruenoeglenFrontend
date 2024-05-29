@@ -1,8 +1,8 @@
 <script>
-	import { convertDateString } from '../utils/utils';
+	import { page } from '$app/stores';
+	import { getDateTime } from '../utils/utils';
 
 	export let user;
-	export let API_HOST;
 </script>
 
 <li class="py-4 hover:bg-gray-50 transition-colors duration-200 ease-in-out">
@@ -11,7 +11,7 @@
 			<div class="flex-shrink-0 mb-4 sm:mb-0">
 				<img
 					class="w-16 h-16 rounded-full"
-					src="{API_HOST}/users/{user.id}/image"
+					src="{$page.data.API_HOST}/users/{user.id}/image"
 					alt={user.name}
 				/>
 			</div>
@@ -19,10 +19,10 @@
 				<p class="text-lg font-medium text-gray-900 truncate">{user.id} - {user.name}</p>
 				<p class="text-sm text-gray-500 truncate">{user.email}</p>
 				<p class="text-sm text-gray-500 truncate">
-					Oprettet: {convertDateString(user.created_at)}
+					Oprettet: {getDateTime(user.created_at)}
 				</p>
 				<p class="text-sm text-gray-500 truncate">
-					Redigeret: {convertDateString(user.updated_at)}
+					Redigeret: {getDateTime(user.updated_at)}
 				</p>
 			</div>
 			<div class="mt-4 sm:mt-0 sm:ml-auto flex items-center space-x-4">

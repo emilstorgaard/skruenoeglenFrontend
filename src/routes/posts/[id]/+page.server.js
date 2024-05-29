@@ -38,8 +38,7 @@ export const load = async ({ params }) => {
 	return {
 		post,
 		images,
-		comments,
-		API_HOST
+		comments
 	};
 };
 

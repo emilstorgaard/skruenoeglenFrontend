@@ -1,4 +1,5 @@
 <script>
+	import { getDate } from '../../../../lib/utils/utils';
 	export let data;
 
 	let imageUrls = [];
@@ -33,15 +34,17 @@
 					class="space-y-4 md:space-y-6"
 					enctype="multipart/form-data"
 				>
-					{#each imageUrls as imageUrl (imageUrl)}
-						<div
-							class="w-32 h-32 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center mx-auto"
-						>
-							{#if imageUrl}
-								<img src={imageUrl} alt="Profile" class="object-cover w-full h-full" />
-							{/if}
-						</div>
-					{/each}
+					<div class="max-h-80 overflow-y-scroll flex gap-4">
+						{#each imageUrls as imageUrl (imageUrl)}
+							<div
+								class="flex-1 max-h-20 max-w-20 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center mx-auto"
+							>
+								{#if imageUrl}
+									<img src={imageUrl} alt="Profile" class="object-cover w-full h-full" />
+								{/if}
+							</div>
+						{/each}
+					</div>
 					<div class="relative mx-auto">
 						<input
 							on:change={handleFileUpload}
@@ -139,7 +142,7 @@
 							>Bilens Første Registrering</label
 						>
 						<input
-							value={data.post.car_first_registration}
+							value={getDate(data.post.car_first_registration)}
 							type="date"
 							name="carFirstRegistration"
 							id="carFirstRegistration"

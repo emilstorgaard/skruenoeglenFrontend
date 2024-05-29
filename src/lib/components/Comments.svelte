@@ -1,7 +1,7 @@
 <script>
-	import { convertDateString } from '../utils/utils';
+	import { page } from '$app/stores';
+	import { getDateTime } from '../utils/utils';
 	export let comments = [];
-	export let API_HOST;
 
 	function toggleDropdown(commentId) {
 		dropdownVisible = {
@@ -45,13 +45,13 @@
 						<p class="inline-flex items-center mr-3 text-sm text-gray-900">
 							<img
 								class="mr-2 w-6 h-6 rounded-full"
-								src="{API_HOST}/users/{comment.user_id}/image"
+								src="{$page.data.API_HOST}/users/{comment.user_id}/image"
 								alt="user"
 							/>
 							{comment.name}
 						</p>
 					</a>
-					<p class="text-sm text-gray-600">{convertDateString(comment.created_at)}</p>
+					<p class="text-sm text-gray-600">{getDateTime(comment.created_at)}</p>
 					{#if comment.solution}
 						<svg
 							class="ml-2 w-4 h-4 text-green-500"

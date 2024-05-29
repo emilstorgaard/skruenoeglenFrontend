@@ -1,7 +1,7 @@
 <script>
-	import { convertDateString } from '../utils/utils';
+	import { page } from '$app/stores';
+	import { getDateTime } from '../utils/utils';
 	export let user;
-	export let API_HOST;
 </script>
 
 <div class="relative mt-16 mb-32 max-w-sm mx-auto mt-24">
@@ -9,7 +9,7 @@
 		<div class="absolute -mt-20 w-full flex justify-center">
 			<div class="h-32 w-32">
 				<img
-					src="{API_HOST}/users/{user.id}/image"
+					src="{$page.data.API_HOST}/users/{user.id}/image"
 					alt="profile"
 					class="rounded-full object-cover h-full w-full shadow-md"
 				/>
@@ -24,9 +24,9 @@
 			<div class="px-6 mt-4">
 				<p class="text-gray-600 text-base">
 					<strong>Oprettet:</strong>
-					{convertDateString(user.created_at)}<br />
+					{getDateTime(user.created_at)}<br />
 					<strong>Redigeret:</strong>
-					{convertDateString(user.updated_at)}<br />
+					{getDateTime(user.updated_at)}<br />
 				</p>
 			</div>
 		</div>

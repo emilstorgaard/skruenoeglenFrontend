@@ -1,4 +1,5 @@
 <script>
+	import { getDate } from '../../../../../../lib/utils/utils';
 	export let data;
 
 	let imageUrl = '';
@@ -12,20 +13,6 @@
 			};
 			reader.readAsDataURL(file);
 		}
-	}
-	function convertDateString(dateString) {
-		// Create a new Date object from the input string
-		const date = new Date(dateString);
-
-		// Extract the date and time components
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-		const day = String(date.getDate()).padStart(2, '0');
-
-		// Construct the desired format
-		const formattedDate = `${year}-${month}-${day}`;
-
-		return formattedDate;
 	}
 </script>
 
@@ -126,7 +113,7 @@
 							>Første Registrering</label
 						>
 						<input
-							value={convertDateString(data.car.first_registration)}
+							value={getDate(data.car.first_registration)}
 							type="date"
 							name="firstRegistration"
 							id="firstRegistration"

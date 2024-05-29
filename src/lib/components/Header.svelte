@@ -25,7 +25,7 @@
 					<img class="h-6 w-auto" src="/bell.png" alt="notifications" />
 				</a>
 				<a href="/users/{$page.data.loggedInUser.uid}" class="button default-button">
-					<img class="h-6 w-auto" src="/user.png" alt="profile" />
+					<img class="h-6 w-auto rounded-full" src="{$page.data.API_HOST}/users/{$page.data.loggedInUser.uid}/image" alt="profile" />
 				</a>
 				{#if $page.data.loggedInUser.roleId == 1}
 					<a href="/admin" class="button default-button">
@@ -113,7 +113,7 @@
 									on:click={toggleMenu}
 									class="w-full max-w-md block button default-button flex justify-center items-center"
 								>
-									<img class="h-6 w-auto" src="/user.png" alt="profile" />
+									<img class="h-6 w-auto rounded-full" src="{$page.data.API_HOST}/users/{$page.data.loggedInUser.uid}/image" alt="profile" />
 								</a>
 							</div>
 							{#if $page.data.loggedInUser.roleId == 1}

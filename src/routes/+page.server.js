@@ -25,7 +25,6 @@ export const load = async () => {
 
 	return {
 		posts,
-		categories,
-		API_HOST
+		categories
 	};
 };

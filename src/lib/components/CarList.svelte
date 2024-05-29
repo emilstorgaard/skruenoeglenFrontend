@@ -1,8 +1,8 @@
 <script>
-	import { convertDateString } from '../utils/utils';
+	import { page } from '$app/stores';
+	import { getDate, getDateTime } from '../utils/utils';
 	export let cars = [];
 	export let user;
-	export let API_HOST;
 </script>
 
 <div class="bg-white">
@@ -15,7 +15,7 @@
 						class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80"
 					>
 						<img
-							src="{API_HOST}/cars/{car.id}/image"
+							src="{$page.data.API_HOST}/cars/{car.id}/image"
 							alt="bil"
 							class="h-full w-full object-cover object-center lg:h-full lg:w-full"
 						/>
@@ -53,7 +53,7 @@
 							<p class="text-sm text-gray-500">Første registrering</p>
 						</div>
 						<div class="flex items-center">
-							<p class="text-sm text-gray-500">{convertDateString(car.first_registration)}</p>
+							<p class="text-sm text-gray-500">{getDate(car.first_registration)}</p>
 						</div>
 					</div>
 
@@ -62,7 +62,7 @@
 							<p class="text-sm text-gray-500">Oprettet</p>
 						</div>
 						<div class="flex items-center">
-							<p class="text-sm text-gray-500">{convertDateString(car.created_at)}</p>
+							<p class="text-sm text-gray-500">{getDateTime(car.created_at)}</p>
 						</div>
 					</div>
 
@@ -71,7 +71,7 @@
 							<p class="text-sm text-gray-500">Redigeret</p>
 						</div>
 						<div class="flex items-center">
-							<p class="text-sm text-gray-500">{convertDateString(car.updated_at)}</p>
+							<p class="text-sm text-gray-500">{getDateTime(car.updated_at)}</p>
 						</div>
 					</div>
 					<div class="mt-8 flex justify-center pb-6">

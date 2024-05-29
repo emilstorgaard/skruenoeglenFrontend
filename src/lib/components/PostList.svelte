@@ -1,11 +1,9 @@
 <script>
-	import { convertDateString } from '../utils/utils';
+	import { page } from '$app/stores';
+	import { getDateTime } from '../utils/utils';
 
 	export let posts = [];
 	export let categorySearch = '';
-	export let API_HOST = '';
-
-	console.log(posts);
 </script>
 
 <div class="mx-auto max-w-2xl px-6 py-6 lg:max-w-7xl">
@@ -30,7 +28,7 @@
 						<img src="/chat.png" alt="kommentare" class="h-4 w-4 ml-1" />
 					</div>
 					<div class="flex items-center">
-						<p class="text-sm text-gray-500">{convertDateString(post.created_at)}</p>
+						<p class="text-sm text-gray-500">{getDateTime(post.created_at)}</p>
 						<img src="/clock.png" alt="tid" class="h-4 w-4 ml-1" />
 					</div>
 				</div>
@@ -39,7 +37,7 @@
 						<p class="inline-flex items-center mr-3 text-sm text-gray-900">
 							<img
 								class="mr-2 w-6 h-6 rounded-full"
-								src="{API_HOST}/users/{post.user_id}/image"
+								src="{$page.data.API_HOST}/users/{post.user_id}/image"
 								alt="user"
 							/>
 							{post.user_name}

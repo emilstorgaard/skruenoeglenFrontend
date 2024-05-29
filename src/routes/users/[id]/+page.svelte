@@ -7,7 +7,7 @@
 </script>
 
 <div class="w-full h-screen px-10 pt-10">
-	<Profile user={data.user} API_HOST={data.API_HOST} />
+	<Profile user={data.user} />
 
 	<section class="bg-gray-0">
 		<div class="flex flex-ol items-center justify-center px-6 py-8 mx-auto lg:py-0">
@@ -28,5 +28,5 @@
 		{/if}
 	</section>
 
-	<CarList cars={data.cars} user={data.user} API_HOST={data.API_HOST} />
+	<CarList cars={data.cars} user={data.user} />
 </div>

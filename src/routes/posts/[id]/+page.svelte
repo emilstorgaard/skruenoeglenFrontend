@@ -8,13 +8,13 @@
 </script>
 
 <div class="pt-6">
-	<ImageGallery {data} />
+	<ImageGallery images={data.images} />
 	<div
 		class="mx-auto max-w-2xl px-4 pb-4 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8"
 	>
-		<PostDetails {data} />
-		<CommentSection {data} />
+		<PostDetails post={data.post} />
+		<CommentSection />
 	</div>
 </div>
 
-<Comments comments={data.comments} API_HOST={data.API_HOST} />
+<Comments comments={data.comments} />

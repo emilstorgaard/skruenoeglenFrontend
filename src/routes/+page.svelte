@@ -13,7 +13,7 @@
 	async function getPostsByCategoryId(categoryId) {
 		if (categoryId) {
 			categorySearch = data.categories[categoryId - 1].name;
-			let res = await fetch(`${data.API_HOST}/posts/categories/${categoryId}`, {
+			let res = await fetch(`${$page.data.API_HOST}/posts/categories/${categoryId}`, {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json'
@@ -23,7 +23,7 @@
 			posts = await res.json();
 		} else {
 			categorySearch = 'Alle';
-			let res = await fetch(`${data.API_HOST}/posts`, {
+			let res = await fetch(`${$page.data.API_HOST}/posts`, {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json'
@@ -58,4 +58,4 @@
 	</div>
 </div>
 
-<PostList {posts} {categorySearch} API_HOST={data.API_HOST} />
+<PostList {posts} {categorySearch} />
