@@ -2,43 +2,43 @@ import { fail, redirect } from '@sveltejs/kit';
 import { API_HOST } from '$env/static/private';
 
 export const load = async ({ locals, params }) => {
-	// redirect user if not logged TODO: remember to only allow to edit owned users
+	// Redirect if user is not logged in
 	if (!locals.user) {
 		throw redirect(302, '/login');
 	}
 
-	let user = [];
+	// Redirect if not owner of user or is not admin
+	if (locals.user.uid != params.id && locals.user.roleId != 1) {
+		throw redirect(302, `/users/${params.id}`);
+	}
 
-	const res = await fetch(`${API_HOST}/users/${params.id}`, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${locals.user.jwt}`
-		}
-	});
-
-	user = await res.json();
+	const user = await getUser(params.id)
 
 	return {
 		user
 	};
 };
 
+const getUser = async (id) => {
+	const res = await fetch(`${API_HOST}/users/${id}`, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	});
+
+	return await res.json();
+}
+
 const edit = async ({ locals, request, params }) => {
 	const data = await request.formData();
-	const profileImage = data.get('profileImage');
-	const name = data.get('name');
-	const email = data.get('email');
-	const description = data.get('description');
 
-	// Create form data
 	const formData = new FormData();
-	formData.append('file', profileImage);
-	formData.append('name', name);
-	formData.append('email', email);
-	formData.append('description', description);
+	formData.append('file', data.get('profileImage'));
+	formData.append('name', data.get('name'));
+	formData.append('email', data.get('email'));
+	formData.append('description', data.get('description'));
 
-	// Make PUT request to the endpoint
 	const response = await fetch(`${API_HOST}/users/${params.id}`, {
 		method: 'PUT',
 		headers: {
@@ -52,7 +52,7 @@ const edit = async ({ locals, request, params }) => {
 		return fail(400, { user: true });
 	}
 
-	throw redirect(303, `/users/${params.id}`);
+	throw redirect(302, `/users/${params.id}`);
 };
 
 const newpassword = async ({ locals, request, params }) => {
@@ -63,7 +63,6 @@ const newpassword = async ({ locals, request, params }) => {
 		return fail(400, { invalid: true });
 	}
 
-	// MAKE PUT NEW PASSWORD REQUEST
 	const response = await fetch(`${API_HOST}/auth/new/password/${params.id}`, {
 		method: 'PUT',
 		headers: {
@@ -78,7 +77,7 @@ const newpassword = async ({ locals, request, params }) => {
 		return fail(400, { user: true });
 	}
 
-	throw redirect(303, `/`);
+	throw redirect(302, `/users/${params.id}`);
 };
 
 export const actions = { edit, newpassword };

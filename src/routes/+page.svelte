@@ -1,61 +1,52 @@
 <script>
 	import { page } from '$app/stores';
 
-	import CategorySelector from '../lib/components/CategorySelector.svelte';
-	import LicensePlateSearch from '../lib/components/LicensePlateSearch.svelte';
-	import PostList from '../lib/components/PostList.svelte';
+	import PostFilter from '$lib/components/PostFilter.svelte';
+	import PostList from '$lib/components/PostList.svelte';
 
 	export let data;
 
 	let posts = data.posts;
-
 	let categorySearch = '';
-	async function getPostsByCategoryId(categoryId) {
-		if (categoryId) {
-			categorySearch = data.categories[categoryId - 1].name;
-			let res = await fetch(`${$page.data.API_HOST}/posts/categories/${categoryId}`, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			});
 
-			posts = await res.json();
-		} else {
-			categorySearch = 'Alle';
-			let res = await fetch(`${$page.data.API_HOST}/posts`, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			});
+	let postInputs = {
+		brand: '',
+		model: '',
+		categoryId: '',
+		search: ''
+	};
 
+    // Function to build query string from postInputs
+	const buildQueryString = (inputs) => {
+		// Initialize an array to hold the query parameters
+		let queryParams = [];
+
+		// Conditionally add parameters to the queryParams array if they are defined
+		if (postInputs.brand !== undefined) queryParams.push(`brand=${postInputs.brand}`);
+		if (postInputs.model !== undefined) queryParams.push(`model=${postInputs.model}`);
+		if (postInputs.categoryId !== undefined)queryParams.push(`category_id=${postInputs.categoryId}`);
+		if (postInputs.search !== undefined) queryParams.push(`search=${postInputs.search}`);
+
+		// Join the query parameters with '&' to form the query string
+		return queryParams.length ? `?${queryParams.join('&')}` : '';
+	};
+
+	async function getPostsByInput() {
+        const queryString = buildQueryString(postInputs);
+
+        try {
+			const res = await fetch(`${$page.data.API_HOST}/posts/${queryString}`, {
+				method: 'GET',
+				headers: { 'Content-Type': 'application/json' }
+			});
+			if (!res.ok) throw new Error('Kunne ikke hente opslag');
 			posts = await res.json();
+		} catch (error) {
+			console.error(error);
 		}
 	}
 </script>
 
-{#if $page.data.loggedInUser}
-	<section>
-		<div class="flex justify-center">
-			<a
-				href="/posts/add"
-				class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-				>Tilføj opslag</a
-			>
-		</div>
-	</section>
-{/if}
-
-<div class="mx-auto max-w-2xl px-6 py-6 lg:max-w-7xl">
-	<div class="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-1 lg:grid-cols-2">
-		<section>
-			<LicensePlateSearch />
-		</section>
-		<section>
-			<CategorySelector categories={data.categories} handle={getPostsByCategoryId} />
-		</section>
-	</div>
-</div>
+<PostFilter bind:postInputs {getPostsByInput} categories={data.categories} />
 
 <PostList {posts} {categorySearch} />

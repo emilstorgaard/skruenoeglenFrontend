@@ -1,5 +1,17 @@
 <script>
+	import { enhance } from "$app/forms"
+	import Spinner from "$lib/components/Spinner.svelte";
+
 	let imageUrl = '';
+	let licenseplateInput = '';
+	let car= {
+		brandnavn:"",
+		modelnavn: "",
+		køretøjVariantnavn:"",
+		drivkaftType:"",
+		førsteRegistreringDato:"",
+		stelnummer: ""
+	};
 
 	function handleFileUpload(event) {
 		const file = event.target.files[0];
@@ -10,6 +22,24 @@
 			};
 			reader.readAsDataURL(file);
 		}
+	}
+
+	let carIsLoading;
+	async function getCarByLicensePlate(licenseplate) {
+		carIsLoading = true;
+		let res = await fetch(`https://lp.skruenøglen.dk/getcarbylp?licenseplate=${licenseplate}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+
+		if (res.status == 200) {
+			car = await res.json();
+			console.log(car);
+			car.førsteRegistreringDato = new Date(car.førsteRegistreringDato).toISOString().substring(0,10);
+		}
+		carIsLoading = false;		
 	}
 </script>
 
@@ -25,6 +55,7 @@
 					method="POST"
 					class="space-y-4 md:space-y-6"
 					enctype="multipart/form-data"
+					use:enhance
 				>
 					<div
 						class="w-32 h-32 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center mx-auto"
@@ -43,61 +74,68 @@
 						/>
 					</div>
 					<div>
-						<label for="licensePlate" class="block mb-2 text-sm font-medium text-gray-900"
-							>Nummerplade</label
-						>
-						<input
+						<div class="flex gap-2">
+							<label for="licensePlate" class="block mb-2 text-sm font-medium text-gray-900">Nummerplade</label>
+							{#if carIsLoading}<Spinner />{/if}
+						</div>
+						<input 
+							bind:value={licenseplateInput}
+							on:change={getCarByLicensePlate(licenseplateInput)}
 							type="text"
 							name="licensePlate"
 							id="licensePlate"
 							class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
 							placeholder="AB12345"
-							required=""
+							required
 						/>
 					</div>
 					<div>
 						<label for="brand" class="block mb-2 text-sm font-medium text-gray-900">Mærke</label>
 						<input
+							bind:value={car.brandnavn}
 							type="text"
 							name="brand"
 							id="brand"
 							class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
 							placeholder="VW"
-							required=""
+							required
 						/>
 					</div>
 					<div>
 						<label for="model" class="block mb-2 text-sm font-medium text-gray-900">Model</label>
 						<input
+							bind:value={car.modelnavn}
 							type="text"
 							name="model"
 							id="model"
 							class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
 							placeholder="UP"
-							required=""
+							required
 						/>
 					</div>
 					<div>
 						<label for="motor" class="block mb-2 text-sm font-medium text-gray-900">Motor</label>
 						<input
+							bind:value={car.køretøjVariantnavn}
 							type="text"
 							name="motor"
 							id="motor"
 							class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
 							placeholder="1.4"
-							required=""
+							required
 						/>
 					</div>
 					<div>
 						<label for="type" class="block mb-2 text-sm font-medium text-gray-900">Drivmiddel</label
 						>
 						<input
+						bind:value={car.drivkaftType}
 							type="text"
 							name="type"
 							id="type"
 							class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
 							placeholder="Benzin"
-							required=""
+							required
 						/>
 					</div>
 					<div>
@@ -105,23 +143,25 @@
 							>Første Registrering</label
 						>
 						<input
+							bind:value={car.førsteRegistreringDato}
 							type="date"
 							name="firstRegistration"
 							id="firstRegistration"
 							class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
 							placeholder="2014.10.10"
-							required=""
+							required
 						/>
 					</div>
 					<div>
 						<label for="vin" class="block mb-2 text-sm font-medium text-gray-900">Stelnummer</label>
 						<input
+							bind:value={car.stelnummer}
 							type="text"
 							name="vin"
 							id="vin"
 							class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
 							placeholder="HSDJ2782RUA"
-							required=""
+							required
 						/>
 					</div>
 

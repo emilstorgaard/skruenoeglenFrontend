@@ -1,5 +1,8 @@
 <script>
+	import { enhance } from "$app/forms"
+	import { page } from '$app/stores';
 	import { getDate } from '../utils/utils.js';
+
 	export let post;
 </script>
 
@@ -7,6 +10,7 @@
 	<h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl mb-4">
 		{post.title}
 	</h1>
+	{#if ($page.data.loggedInUser?.uid == post.user_id || $page.data.loggedInUser?.roleId == 1) && $page.data.loggedInUser}
 	<div class="mt-4 sm:mt-0 sm:ml-auto flex items-center space-x-4">
 		<span class="text-sm text-gray-500">
 			<a
@@ -16,7 +20,7 @@
 			>
 		</span>
 		<span class="text-sm text-gray-500">
-			<form action="?/deletePost" method="POST">
+			<form action="?/deletePost" method="POST" use:enhance>
 				<button
 					type="submit"
 					class="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out"
@@ -25,6 +29,7 @@
 			</form>
 		</span>
 	</div>
+	{/if}
 </div>
 <div
 	class="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6"
@@ -54,7 +59,16 @@
 					>
 				</li>
 				<li class="text-gray-400">
-					<span class="text-gray-600">Kategori: {post.category_id}</span>
+					<span class="text-gray-600">Kategori: {post.category_name}</span>
+				</li>
+				<li class="text-gray-400">
+					<span class="text-gray-600">Opretter:
+						{#if post.user_name}
+						<a href="/users/{post.user_id}" class="text-blue-500 underline">{post.user_name}</a>
+						{:else}
+						<p>Slettet Bruger</p>
+						{/if}
+					</span>
 				</li>
 			</ul>
 		</div>

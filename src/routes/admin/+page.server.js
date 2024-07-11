@@ -7,29 +7,54 @@ export const load = async ({ locals }) => {
 		throw redirect(302, '/login');
 	}
 
-	let users = [];
+	const users = await getUsers()
 
+	return {
+		users
+	};
+};
+
+const getUsers = async () => {
 	const res = await fetch(`${API_HOST}/users`, {
 		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	});
+
+	return await res.json();
+}
+
+const banUser = async ({ request, locals }) => {
+	const data = await request.formData();
+	const userID = data.get('userID');
+
+	await fetch(`${API_HOST}/users/${userID}/ban`, {
+		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${locals.user.jwt}`
 		}
 	});
+};
 
-	users = await res.json();
+const unbanUser = async ({ request, locals }) => {
+	const data = await request.formData();
+	const userID = data.get('userID');
 
-	return {
-		users,
-		API_HOST
-	};
+	await fetch(`${API_HOST}/users/${userID}/unban`, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${locals.user.jwt}`
+		}
+	});
 };
 
 const deleteUser = async ({ request, locals, cookies }) => {
 	const data = await request.formData();
 	const userID = data.get('userID');
 
-	// MAKE POST LOGIN REQUEST
 	await fetch(`${API_HOST}/users/${userID}`, {
 		method: 'DELETE',
 		headers: {
@@ -38,23 +63,18 @@ const deleteUser = async ({ request, locals, cookies }) => {
 		}
 	});
 
-	// If user delete it self
+	// If admin delete it self
 	if (locals.user.uid == userID) {
 		// eat the cookie
 		cookies.set('jwt', '', {
 			path: '/',
 			httpOnly: true,
-			//expires: new Date(Date.now() - 3600000), // new Date(0)
 			maxAge: 0,
 			secure: process.env.NODE_ENV === 'production'
 		});
 
-		// redirect the user
-		throw redirect(302, '/login');
-	} else {
-		// redirect the user
-		throw redirect(302, '/admin');
+		throw redirect(302, '/signup');
 	}
 };
 
-export const actions = { deleteUser };
+export const actions = { deleteUser, banUser, unbanUser };

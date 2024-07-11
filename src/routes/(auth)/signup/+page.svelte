@@ -1,4 +1,7 @@
 <script>
+	import { enhance } from "$app/forms"
+	import ErrorMessage from "$lib/components/ErrorMessage.svelte";
+
 	export let form;
 
 	let imageUrl = '';
@@ -22,6 +25,9 @@
 		</a>
 		<div class="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
 			<div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+				{#if form?.message}
+					<ErrorMessage message={form.message}/>
+				{/if}
 				<h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
 					Opret bruger
 				</h1>
@@ -30,6 +36,7 @@
 					action="?/signup"
 					method="POST"
 					enctype="multipart/form-data"
+					use:enhance
 				>
 					<div
 						class="w-32 h-32 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center mx-auto"
@@ -55,7 +62,7 @@
 							id="name"
 							class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
 							placeholder="Jens Jensen"
-							required=""
+							required
 						/>
 					</div>
 					<div>
@@ -66,7 +73,7 @@
 							id="email"
 							class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
 							placeholder="jens@jensen.com"
-							required=""
+							required
 						/>
 					</div>
 					<div>
@@ -91,7 +98,7 @@
 							id="password"
 							placeholder="••••••••"
 							class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
-							required=""
+							required
 						/>
 					</div>
 					<div>
@@ -104,7 +111,7 @@
 							id="repeat-password"
 							placeholder="••••••••"
 							class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
-							required=""
+							required
 						/>
 					</div>
 					<button type="submit" class="w-full button signup-button">Opret bruger</button>
@@ -113,18 +120,6 @@
 		</div>
 	</div>
 </section>
-
-{#if form?.invalid}
-	<p>Invalid values.</p>
-{/if}
-
-{#if form?.pwdMatch}
-	<p>Password does not match.</p>
-{/if}
-
-{#if form?.user}
-	<p>Email is taken.</p>
-{/if}
 
 <style>
 	/* Tilpasninger af knapstil */

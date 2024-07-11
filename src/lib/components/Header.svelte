@@ -1,4 +1,5 @@
 <script>
+	import { enhance } from "$app/forms"
 	import { page } from '$app/stores';
 
 	let isMenuOpen = false;
@@ -15,21 +16,20 @@
 			<span class="text-lg font-semibold">Skruenøglens Forum</span>
 		</a>
 
-		<div class="hidden lg:flex flex-1 justify-center">
-			<input type="text" placeholder="Søg..." class="search-input" />
-		</div>
-
-		<div class="hidden lg:flex items-center space-x-4 ml-5">
+		<div class="hidden lg:flex items-center space-x-6 ml-5">
+			<a href="/about" class="hover:opacity-70">
+				<img class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300" src="/about.png" alt="about" />
+			</a>
 			{#if $page.data.loggedInUser}
-				<a href="/notifications" class="button default-button w-max-md">
-					<img class="h-6 w-auto" src="/bell.png" alt="notifications" />
+				<a href="/posts/add" class="hover:opacity-70">
+					<img class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300" src="/addPost.png" alt="addPost" />
 				</a>
-				<a href="/users/{$page.data.loggedInUser.uid}" class="button default-button">
-					<img class="h-6 w-auto rounded-full" src="{$page.data.API_HOST}/users/{$page.data.loggedInUser.uid}/image" alt="profile" />
+				<a href="/users/{$page.data.loggedInUser?.uid}" class="hover:opacity-70">
+					<img class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300" src="{$page.data.API_HOST}/users/{$page.data.loggedInUser?.uid}/image" alt="profile" />
 				</a>
-				{#if $page.data.loggedInUser.roleId == 1}
-					<a href="/admin" class="button default-button">
-						<img class="h-6 w-auto" src="/admin.png" alt="admin" />
+				{#if $page.data.loggedInUser?.roleId == 1}
+					<a href="/admin" class="hover:opacity-70">
+						<img class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300" src="/admin.png" alt="admin" />
 					</a>
 				{/if}
 			{/if}
@@ -38,8 +38,8 @@
 				<a href="/login" class="button login-button">Log ind</a>
 			{/if}
 			{#if $page.data.loggedInUser}
-				<form action="/logout" method="POST">
-					<button type="submit" class="button logout-button">Log ud</button>
+				<form action="/logout" method="POST" use:enhance>
+					<button type="submit" class="h-10 button logout-button">Log ud</button>
 				</form>
 			{/if}
 		</div>
@@ -97,33 +97,46 @@
 						<div class="flex-1 flex justify-center">
 							<input type="text" placeholder="Search" class="search-input" />
 						</div>
+						<div class="flex-1 flex justify-center">
+							<a
+								href="/about"
+								on:click={toggleMenu}
+								class="w-full max-w-md block button default-button flex justify-center items-center hover:opacity-70"
+							>
+								<img class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 mr-6" src="/about.png" alt="about" />
+								<p class="text-black">Om</p>
+							</a>
+						</div>
 						{#if $page.data.loggedInUser}
 							<div class="flex-1 flex justify-center">
 								<a
-									href="/notifications"
+									href="/posts/add"
 									on:click={toggleMenu}
-									class="w-full max-w-md block button default-button flex justify-center items-center"
+									class="w-full max-w-md block button default-button flex justify-center items-center hover:opacity-70"
 								>
-									<img class="h-6 w-auto" src="/bell.png" alt="notifications" />
+									<img class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 mr-6" src="/addPost.png" alt="addPost" />
+									<p class="text-black">Tilgøj Opslag</p>
 								</a>
 							</div>
 							<div class="flex-1 flex justify-center">
 								<a
-									href="/users/{$page.data.loggedInUser.uid}"
+									href="/users/{$page.data.loggedInUser?.uid}"
 									on:click={toggleMenu}
-									class="w-full max-w-md block button default-button flex justify-center items-center"
+									class="w-full max-w-md block button default-button flex justify-center items-center hover:opacity-70"
 								>
-									<img class="h-6 w-auto rounded-full" src="{$page.data.API_HOST}/users/{$page.data.loggedInUser.uid}/image" alt="profile" />
+									<img class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 mr-6" src="{$page.data.API_HOST}/users/{$page.data.loggedInUser.uid}/image" alt="profile" />
+									<p class="text-black">Profil</p>
 								</a>
 							</div>
-							{#if $page.data.loggedInUser.roleId == 1}
+							{#if $page.data.loggedInUser?.roleId == 1}
 								<div class="flex-1 flex justify-center">
 									<a
 										href="/admin"
 										on:click={toggleMenu}
-										class="w-full max-w-md block button default-button flex justify-center items-center"
+										class="w-full max-w-md block button default-button flex justify-center items-center hover:opacity-70"
 									>
-										<img class="h-6 w-auto" src="/admin.png" alt="admin" />
+										<img class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 mr-6" src="/admin.png" alt="admin" />
+										<p class="text-black">Admin</p>
 									</a>
 								</div>
 							{/if}
@@ -147,7 +160,7 @@
 							</div>
 						{/if}
 						{#if $page.data.loggedInUser}
-							<form action="/logout" method="POST" class="flex-1 flex justify-center">
+							<form action="/logout" method="POST" class="flex-1 flex justify-center" use:enhance>
 								<button type="submit" class="w-full max-w-md block button logout-button"
 									>Log ud</button
 								>
